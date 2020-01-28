@@ -1,0 +1,141 @@
+
+--add new Columns
+--***************
+ALTER TABLE Customers
+ADD Email varchar(255);
+
+
+--Creation de table
+--****************
+BEGIN
+CREATE TABLE [dbo].[ACR](
+	[ACR_ID] [int] IDENTITY(1,1) NOT NULL,
+	[ACR_PROGRAM_ID] [int] NULL,
+	[ACR_FACILITY_ID] [int] NULL,
+	[ACR_LOB_ID] [int] NULL,
+	[ACR_SECTION_ID] [int] NULL,
+	[ACR_UWY] [int] NULL,
+	[ACR_QUATER_DATE] [date] NULL,
+	[ACR_CURRENCY] [nchar](3) NULL,
+	[ACR_ESTIMATE] [decimal](18, 2) NULL,
+	[ACR_TOTAL_INCURED] [decimal](18, 2) NULL,
+	[ACR_ACR_VALUE] [decimal](18, 2) NULL,
+	[ACR_TAC_REFERENCE] [nvarchar](250) NULL,
+	[ACR_GENERATED] [bit] NULL,
+	[ACR_BOOKED_DATE] [date] NULL,
+	[ACR_QUARTER] [varchar](2) NULL,
+	[ACR_MULTI_GENERATED] [bit] NULL,
+	[ACR_FLAG] [nvarchar](50) NULL,
+	[ACR_USER] [varchar](20) NULL,
+	[ACR_COMMENT] [text] NULL,
+	[ACR_OMEGA_PRODUCTION_MONTH_ID] [int] NULL,
+ CONSTRAINT [PK_ACR] PRIMARY KEY CLUSTERED 
+(
+	[ACR_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 70) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+
+
+
+--Check
+--*****
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ACR]') AND type in (N'U'))
+
+
+
+--Delete
+--******
+DELETE FROM Sales.SalesPersonQuotaHistory   
+FROM Sales.SalesPersonQuotaHistory AS spqh  
+INNER JOIN Sales.SalesPerson AS sp  
+ON spqh.BusinessEntityID = sp.BusinessEntityID  
+WHERE sp.SalesYTD > 2500000.00;  
+GO  
+
+
+--add Constraint
+--***************
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ACR_TPA_FACILITIES]') AND parent_object_id = OBJECT_ID(N'[dbo].[ACR]'))
+ALTER TABLE [dbo].[ACR]  WITH CHECK ADD  CONSTRAINT [FK_ACR_TPA_FACILITIES] FOREIGN KEY([ACR_FACILITY_ID])
+REFERENCES [dbo].[TPA_FACILITIES] ([FACI_ID])
+GO
+
+
+--Drop Columns
+--************
+ALTER TABLE "table_name"
+DROP COLUMN "column_name";
+
+--sp_helpconstraint
+--*********************
+exec sp_helpconstraint [dbo.CustomerReport]
+go
+
+
+
+----HELp
+SELECT DISTINCT p.name AS proc_name, t.name AS table_name
+FROM sys.sql_dependencies d 
+INNER JOIN sys.procedures p ON p.object_id = d.object_id
+INNER JOIN sys.tables     t ON t.object_id = d.referenced_major_id
+where  t.name = 'OMEGA_BOOKING_FLAT_FILE'
+ORDER BY proc_name, table_name 
+
+
+exec sp_help TRANSACTION_OTHER_LIABILITY_OCCURENCE
+
+
+GO  
+sp_helptext @objname = N'AdventureWorks2012.Sales.SalesOrderHeader', @columnname = TotalDue ;  
+GO  
+
+
+
+if (select @@SERVERNAME ) != 'DCVMAISQL05\SMGEN02'
+begin
+
+
+
+MERGE
+-----
+-----
+https://www.mssqltips.com/sqlservertip/1704/using-merge-in-sql-server-to-insert-update-and-delete-at-the-same-time/
+
+--MERGE SQL statement - Part 2
+
+--Synchronize the target table with refreshed data from source table
+MERGE Products AS TARGET
+USING UpdatedProducts AS SOURCE 
+ON (TARGET.ProductID = SOURCE.ProductID) 
+--When records are matched, update the records if there is any change
+WHEN MATCHED AND TARGET.ProductName <> SOURCE.ProductName OR TARGET.Rate <> SOURCE.Rate 
+THEN UPDATE SET TARGET.ProductName = SOURCE.ProductName, TARGET.Rate = SOURCE.Rate 
+--When no records are matched, insert the incoming records from source table to target table
+WHEN NOT MATCHED BY TARGET 
+THEN INSERT (ProductID, ProductName, Rate) VALUES (SOURCE.ProductID, SOURCE.ProductName, SOURCE.Rate)
+--When there is a row that exists in target and same record does not exist in source then delete this record target
+WHEN NOT MATCHED BY SOURCE 
+THEN DELETE 
+--$action specifies a column of type nvarchar(10) in the OUTPUT clause that returns 
+--one of three values for each row: 'INSERT', 'UPDATE', or 'DELETE' according to the action that was performed on that row
+OUTPUT $action, 
+DELETED.ProductID AS TargetProductID, 
+DELETED.ProductName AS TargetProductName, 
+DELETED.Rate AS TargetRate, 
+INSERTED.ProductID AS SourceProductID, 
+INSERTED.ProductName AS SourceProductName, 
+INSERTED.Rate AS SourceRate; 
+
+SELECT @@ROWCOUNT;
+GO
+
+
+
+
+
+
+
+
+

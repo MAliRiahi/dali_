@@ -1,0 +1,12 @@
+gitgit push --delete origin v1.0.4-DEV
+git tag --delete v1.0.4-DEV
+git tag -a  v1.0.4-DEV -m 'change negative signe'
+git push --tags
+
+
+
+git tag -a 1.1.2 -m "1.1.2"
+git push -- tags
+
+
+git tag -a v1.0.3-DEV -m '1.0.3-DEV'

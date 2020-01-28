@@ -1,0 +1,25 @@
+Merge
+*****
+$ git checkout master
+$ git branch new-branch
+$ git checkout new-branch
+# ...develop some code...
+$ git add –A
+$ git commit –m "Some commit message"
+$ git checkout master
+$ git merge new-branch
+
+
+RESET COMMIT
+************
+git reset HEAD~1
+git reset --hard commit_id
+
+
+
+
+
+CREATE&CHECKOUT
+***************
+$ git checkout -b <branch_name>
+

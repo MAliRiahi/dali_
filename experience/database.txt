@@ -1,0 +1,76 @@
+﻿
+DCVDEVSQL05\SDGEN02
+username= SVC_MGA_DEV
+password= Mg@D!v16
+
+
+DCVTSTSQL05\STGEN02
+svc_mga_ro
+MG@R!ad0nly
+
+
+DCVPRDSQL05\SPGEN02
+svc_mga_ro
+MG@R!ad0nly
+
+MAI SQL Server : DCVMAISQL05\SMGEN02
+Read Only Account : SVC_MGA_RO
+Read Only Password : Pd2Bg2Rh3Aa8P*3P
+
+
+
+
+\\dcvprdoperatio\scordev$\05-JENKINS\ALPHA-REPORT\war
+\\Frncifs01.eu.scor.local\services\SBS\MGA Project
+
+
+Spira MRIAHI
+
+
+
+A SpiraTeam account has been created for you with the following logon information: 
+
+- URL: http://spira/SpiraTeam 
+ - User Name: MRIAHI
+- Password: spira-2018. 
+
+Please contact the System Administrator with any questions.
+
+
+http://dcvuatmga/UAT-PROJECT_CLAIM-ACCOUNTING_Logs/catalina.out
+•	user : mga
+•	passwd : OqJ8K1G
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+spring.datasource.url: jdbc:sqlserver://DCVTSTSQL05;instanceName=STGEN02;databaseName=ALPHA_PROJECT
+spring.datasource.username: SVC_MGA_TST
+spring.datasource.password: Kzk9f8b9oILJ4
+
+
+spring.datasource.url: jdbc:sqlserver://DCVMAISQL05:65200;instance=SMGEN02;databaseName=ALPHA_BULK
+spring.datasource.username:SVC_MGA_RO
+spring.datasource.password:Pd2Bg2Rh3Aa8P*3P
+
+
